@@ -1,0 +1,18 @@
+{
+  "paging": {
+    "page": 1,
+    "count": 1,
+    "maxPage": 1,
+    "itemsTotal": 1
+  },
+  "packages": [
+    {
+      "id": "com.mickyd124.multcloud",
+      "title": "MultCloud TV",
+      "iconUri": "https://raw.githubusercontent.com/mickyd124/Multcloud-webos/main/largeIcon.png",
+      "shortDescription": "Unofficial MultCloud website launcher for LG webOS TVs",
+      "manifestUrl": "https://github.com/mickyd124/Multcloud-webos/releases/latest/download/com.mickyd124.multcloud.manifest.json",
+      "pool": "main"
+    }
+  ]
+}
