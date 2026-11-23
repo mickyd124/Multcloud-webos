@@ -1,4 +1,4 @@
-name: Build MultCloud TV IPK
+name: Build and publish MultCloud TV IPK
 
 on:
   workflow_dispatch:
@@ -9,7 +9,13 @@ on:
       - 'index.html'
       - 'icon.png'
       - 'largeIcon.png'
+      - 'repo.json'
+      - 'webosbrew/apps.json'
+      - '.github/scripts/write-manifest.mjs'
       - '.github/workflows/build.yml'
+
+permissions:
+  contents: write
 
 jobs:
   package:
@@ -24,13 +30,31 @@ jobs:
       - name: Package webOS app
         shell: bash
         run: |
+          set -euo pipefail
           mkdir -p build/app dist
           cp appinfo.json index.html icon.png largeIcon.png build/app/
           ares-package -o dist build/app
           ls -la dist
-      - name: Save installable IPK
+      - name: Generate Homebrew manifest with IPK checksum
+        run: node .github/scripts/write-manifest.mjs
+      - name: Save IPK and manifest as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: multcloud-tv-ipk
-          path: dist/*.ipk
+          name: multcloud-tv-homebrew
+          path: |
+            dist/*.ipk
+            dist/*.manifest.json
           if-no-files-found: error
+      - name: Publish IPK and manifest as public release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version="$(node -p "require('./appinfo.json').version")"
+          tag="v${version}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" dist/*.ipk dist/*.manifest.json --clobber
+          else
+            gh release create "$tag" dist/*.ipk dist/*.manifest.json --target "$GITHUB_SHA" --title "MultCloud TV $tag" --notes "Unofficial MultCloud TV launcher for LG webOS. Includes Homebrew Channel manifest and SHA-256 checksum."
+          fi
