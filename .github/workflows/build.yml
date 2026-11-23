@@ -1,0 +1,36 @@
+name: Build MultCloud TV IPK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'appinfo.json'
+      - 'index.html'
+      - 'icon.png'
+      - 'largeIcon.png'
+      - '.github/workflows/build.yml'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install webOS CLI
+        run: npm install -g @webos-tools/cli
+      - name: Package webOS app
+        shell: bash
+        run: |
+          mkdir -p build/app dist
+          cp appinfo.json index.html icon.png largeIcon.png build/app/
+          ares-package -o dist build/app
+          ls -la dist
+      - name: Save installable IPK
+        uses: actions/upload-artifact@v4
+        with:
+          name: multcloud-tv-ipk
+          path: dist/*.ipk
+          if-no-files-found: error
