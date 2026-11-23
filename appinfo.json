@@ -1,0 +1,11 @@
+{
+  "id": "com.mickyd124.multcloud",
+  "version": "1.0.0",
+  "vendor": "mickyd124",
+  "type": "web",
+  "main": "index.html",
+  "title": "MultCloud TV",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "resolution": "1920x1080"
+}
