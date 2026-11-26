@@ -19,7 +19,8 @@
     a:focus, a:hover {border-color:#fff;background:#228ece;box-shadow:0 0 0 6px #4bbdff77;transform:scale(1.03)}
     small {display:block;color:#9ab6ca;font-size:20px;margin-top:38px;line-height:1.5}
     @media(max-width:700px){h1{font-size:44px}.logo{width:86px;height:86px}p{font-size:20px}a{font-size:22px;min-width:100%;min-height:72px}.actions{gap:15px}small{font-size:16px}}
-  </style>
+  form{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:22px 0}label{display:block;width:100%;font-size:24px}input{font-size:24px;background:#102336;border:2px solid #91abc3;color:white;padding:18px;border-radius:12px;min-width:280px;flex:1}button{font: bold 25px Arial;background:#187bb8;color:white;border:3px solid transparent;border-radius:16px;padding:20px;cursor:pointer}button:focus,input:focus{outline:3px solid white}#status{font-size:22px;margin:10px 0} @media(max-width:700px){input{min-width:100%;width:100%}button{width:100%}}
+</style>
 </head>
 <body>
   <main>
@@ -27,27 +28,38 @@
       <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 67h50a19 19 0 0 0 1-38 29 29 0 0 0-55 10 14 14 0 0 0 4 28Z" fill="#fff"/><path d="M37 57h27M42 46h23" stroke="#167ab5" stroke-width="6" stroke-linecap="round"/></svg>
     </div>
     <h1>MultCloud TV</h1>
-    <p>Open the official MultCloud website on your LG webOS TV. Sign in to your own account to manage connected cloud drives.</p>
+    <p>Connect to your shared Orbit / MultCloud companion on your iPhone or computer to browse and play your own cloud videos. You can also open the official MultCloud website.</p>
+<form id="connect"><label for="server">Companion server URL (same Wi-Fi)</label><input id="server" type="url" placeholder="http://192.168.1.100:3000" required autocomplete="off"><button id="launch" type="submit">Open cloud library</button></form><div id="status" role="status"></div>
     <nav class="actions" aria-label="Actions">
       <a href="https://www.multcloud.com/" id="open">Open MultCloud</a>
       <a href="https://www.multcloud.com/help/add-and-remove.html" class="secondary" id="help">Cloud setup help</a>
     </nav>
-    <small>Use the TV remote arrows and OK to select. This is an unofficial launcher, not a native MultCloud API client. Website sign-in and playback depend on your TV browser.</small>
+    <small>Select MultCloud TV or Both in iSH. Enter the companion access token in the cloud library Settings screen. Both apps share cloud accounts. This is an unofficial companion client, not the official MultCloud API; the official website remains separate. Use private Wi-Fi only.</small>
   </main>
   <script>
-  (function () {
-    var links = [document.getElementById('open'),document.getElementById('help')];
-    var focusIndex = 0;
-    function select(i) {focusIndex=(i+links.length)%links.length; links[focusIndex].focus();}
-    document.addEventListener('keydown', function(e) {
-      var code=e.keyCode;
-      if(code===37||code===38||code===39||code===40) {e.preventDefault();select(focusIndex+((code===37||code===38)?-1:1));}
-      else if(code===13) { e.preventDefault();links[focusIndex].click(); }
-      else if(code===461 && typeof window.close==='function') { window.close(); }
-    });
-    links.forEach(function(el,i){el.addEventListener('focus',function(){focusIndex=i;});});
-    select(0);
-  }());
-  </script>
+(function(){
+ var input=document.getElementById('server'),form=document.getElementById('connect'),status=document.getElementById('status'),launch=document.getElementById('launch');
+ try{input.value=localStorage.getItem('multcloud-companion-url')||'';}catch(e){}
+ form.onsubmit=function(e){
+  e.preventDefault();
+  var url;
+  try{url=new URL(input.value.trim());if(!/^https?:$/.test(url.protocol)||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw Error('Enter a base HTTP(S) server URL, without a path or login.');}
+  catch(err){status.textContent=err.message||'Invalid URL';return;}
+  launch.disabled=true;status.textContent='Checking companion…';
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET',url.origin+'/multcloud',true);xhr.timeout=12000;
+  xhr.onload=function(){launch.disabled=false;if(xhr.status!==200){status.textContent='Companion refused this mode. Select MultCloud TV or Both in iSH.';return;}
+    if(!/\/\?client=multcloud(?:$|&)/.test(xhr.responseURL||'')){status.textContent='Server does not advertise the shared MultCloud view. Update the iSH companion.';return;}
+    try{localStorage.setItem('multcloud-companion-url',url.origin);}catch(e){}
+    location.assign(url.origin+'/multcloud');
+  };
+  xhr.onerror=xhr.ontimeout=function(){launch.disabled=false;status.textContent='Cannot reach companion. Check iSH, Wi-Fi, local network permission and URL.';};
+  xhr.send();
+ };
+ var nodes=[input,launch,document.getElementById('open'),document.getElementById('help')];
+ document.addEventListener('keydown',function(e){var k=e.keyCode;if(k===38||k===40||(document.activeElement!==input&&(k===37||k===39))){e.preventDefault();var i=nodes.indexOf(document.activeElement);nodes[(i+nodes.length+(k===37||k===38?-1:1))%nodes.length].focus();}else if(k===461&&typeof window.close==='function')window.close();});
+ input.focus();
+}());
+</script>
 </body>
 </html>

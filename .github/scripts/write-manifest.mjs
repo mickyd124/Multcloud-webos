@@ -12,7 +12,7 @@ const manifest = {
   version: app.version,
   type: app.type,
   title: app.title,
-  appDescription: 'Unofficial TV-friendly launcher opening the official MultCloud website. It does not provide native cloud browsing or guaranteed video playback.',
+  appDescription: 'Unofficial TV-friendly shared Orbit/iSH cloud companion client and official MultCloud website launcher. Playback depends on TV codecs.',
   iconUri: 'https://raw.githubusercontent.com/mickyd124/Multcloud-webos/main/largeIcon.png',
   sourceUrl: 'https://github.com/mickyd124/Multcloud-webos',
   rootRequired: false,

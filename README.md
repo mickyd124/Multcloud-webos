@@ -1,6 +1,6 @@
 # MultCloud TV for LG webOS
 
-Unofficial TV-remote-friendly launcher for the official [MultCloud](https://www.multcloud.com/) website. This is **not** a native cloud file browser, native video player, or official MultCloud application. MultCloud logins and playback depend on webOS browser compatibility.
+Unofficial TV-remote-friendly shared companion client and launcher for the official [MultCloud](https://www.multcloud.com/) website. The companion cloud library uses Orbit's authenticated API, not an official MultCloud API. The official website remains a separate option.
 
 ## Add to Homebrew Channel
 
@@ -20,8 +20,12 @@ The **Build and publish MultCloud TV IPK** GitHub Actions workflow packages the 
 
 For local packaging, install the CLI with `npm install -g @webos-tools/cli` and run `ares-package -o dist .` from a clean directory containing only the app's `appinfo.json`, `index.html` and icon assets.
 
-**App ID:** `com.mickyd124.multcloud` — **Version:** `1.0.0`.
+**App ID:** `com.mickyd124.multcloud` — **Version:** `1.1.0`.
 
 ## Security and compatibility
 
-No cloud credentials are bundled, stored, or collected by this launcher. Authentication takes place on the official MultCloud website. No root access is required by the app itself, though installing Homebrew Channel or third-party apps may require a supported installation method. Not affiliated with or endorsed by MultCloud or LG.
+No cloud credentials are bundled or collected by this launcher. Official-site authentication takes place on MultCloud. Companion credentials and account tokens are handled by Orbit's existing server and are stored locally on the iPhone; the TV saves the connection token. No root access is required by the app itself, though installing Homebrew Channel or third-party apps may require a supported installation method. Not affiliated with or endorsed by MultCloud or LG.
+
+## iPhone companion setup
+
+Install the [shared iSH companion](https://github.com/mickyd124/orbit-player/blob/main/scripts/ish-install.sh) on your iPhone. Select MultCloud TV or Both. On your TV open MultCloud TV, enter `http://PHONE-IP:3000`, then select Open cloud library. Enter the printed access token in Settings, save, and open Cloud library. The same connected accounts can be opened in Orbit Player. MEGA and WebDAV need account credentials; other providers require their own OAuth/API registrations. Keep iSH foreground and use only a trusted local network. The remote web view depends on the LG webOS browser; physical TV testing remains required.
