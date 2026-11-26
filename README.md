@@ -41,3 +41,7 @@ The [shared companion control centre](https://github.com/mickyd124/orbit-player/
 ## Improved video and audio codec compatibility
 
 Update the shared [Orbit companion](https://github.com/mickyd124/orbit-player/blob/main/scripts/COMPANION.md#smart-webos-media-compatibility-140). MultCloud loads the shared web player directly from that server, so it receives the new media engine and player without reinstalling its TV launcher. Cloud audio files are now browsable. Smart convert preserves compatible H.264/AAC tracks and converts unsupported tracks to H.264/AAC stereo HLS. On playback failure the updated web player can retry using safe conversion. Dashboard Diagnostics shows the actual codecs available in the installed FFmpeg build. Compatibility and transcoding speed depend on the host and TV; DRM-protected media, HDR tone mapping and hardware acceleration are not included.
+
+## Python companion for iPhone iSH
+
+The default shared iSH installer now uses Python 3 instead of Node.js/npm. Follow the [iSH Python installation guide](https://github.com/mickyd124/orbit-player/blob/main/scripts/ISH-PYTHON.md). The launcher still uses the same host URL, token and shared browser player. WebDAV is native; optional rclone supports configured Google Drive, OneDrive, Dropbox and MEGA remotes. TeraBox and in-app OAuth are not implemented in the Python edition; use the Node edition on another host for those features. Physical iSH and TV testing remains outstanding.
