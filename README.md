@@ -29,3 +29,7 @@ No cloud credentials are bundled or collected by this launcher. Official-site au
 ## iPhone companion setup
 
 Install the [shared iSH companion](https://github.com/mickyd124/orbit-player/blob/main/scripts/ish-install.sh) on your iPhone. Select MultCloud TV or Both. On your TV open MultCloud TV, enter `http://PHONE-IP:3000`, then select Open cloud library. Enter the printed access token in Settings, save, and open Cloud library. The same connected accounts can be opened in Orbit Player. MEGA and WebDAV need account credentials; other providers require their own OAuth/API registrations. Keep iSH foreground and use only a trusted local network. The remote web view depends on the LG webOS browser; physical TV testing remains required.
+
+## Android, Windows and Linux companion hosts
+
+The same companion API can now run on Android (Termux), Windows, Linux and iPhone iSH. See the [shared companion installation guide](https://github.com/mickyd124/orbit-player/blob/main/scripts/COMPANION.md). Choose MultCloud TV or Both at startup, then enter the host Wi-Fi IP address and access token in the TV app. No additional TV app upgrade is needed for this host change.
